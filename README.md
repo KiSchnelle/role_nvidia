@@ -1,3 +1,5 @@
+[![TravisCI Actions Status](https://github.com/KiSchnelle/role_nvidia/workflows/TravisCI/badge.svg)](https://github.com/KiSchnelle/role_nvidia/actions)
+
 Role Name
 =========
 
