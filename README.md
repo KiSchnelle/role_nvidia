@@ -1,4 +1,4 @@
-[![TravisCI Actions Status](https://github.com/KiSchnelle/role_nvidia/workflows/TravisCI/badge.svg)](https://github.com/KiSchnelle/role_nvidia/actions)
+[![Build Status](https://travis-ci.com/KiSchnelle/role_nvidia.svg?branch=master)](https://travis-ci.com/KiSchnelle/role_nvidia)
 
 Role Name
 =========
