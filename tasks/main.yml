@@ -1,2 +1,17 @@
 ---
 # tasks file for role_nvidia
+- name: Check OS version and family
+  fail:
+    msg: "This role can only be run against CentOS 7. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+  when:
+    - ansible_distribution|lower == 'centos'
+    - ansible_distribution_major_version is version_compare('7', '!=')
+
+- name: "Check OS version and family"
+  debug:
+    msg: "PASS | This role can only be executed on CentOS 7 operating systems"
+  when:
+    - ansible_distribution|lower == 'centos'
+    - ansible_distribution_major_version is version_compare('7', '==')
+
+- import_tasks: nvidia_driver.yml

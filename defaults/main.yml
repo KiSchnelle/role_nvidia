@@ -1,2 +1,17 @@
 ---
 # defaults file for role_nvidia
+dependencies_packages:
+  - "tar"
+  - "bzip2"
+  - "make"
+  - "automake"
+  - "gcc"
+  - "gcc-c++"
+  - "pciutils"
+  - "elfutils-libelf-devel"
+  - "libglvnd-devel"
+  - "iptables"
+  - "firewalld"
+  - "vim"
+  - "bind-utils"
+  - "wget"

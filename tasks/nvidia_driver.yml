@@ -1,0 +1,60 @@
+---
+- name: Unload noveau
+  community.general.modprobe:
+    name: nouveau
+    state: abesent
+  ignore_errors: true
+
+
+- name: Make sure epel-release is installed.
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+
+
+- name: Install tar, bzip2, make, automake, gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-devel iptables firewalld vim bind-utils wget
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: True
+  with_items: "{{ dependencies_packages }}"
+
+
+- name: Install development tools
+  ansible.builtin.yum:
+    name: "@Development tools"
+    state: present
+
+
+- name: Install kernel-devel, kernel-headers
+  ansible.builtin.yum:
+    name: 
+      - "kernel-devel"
+      - "kernel-headers"
+    state: present
+
+
+- name: Install dkms
+  ansible.builtin.yum:
+    name: "dkms"
+    state: present
+
+
+- name: Reboot the system
+  ansible.builtin.reboot:
+    reboot_timeout: 300
+
+
+- name: Add cuda repo
+  ansible.builtin.yum_repository:
+    name: cuda
+    description: CUDA repo
+    baseurl: "http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-rhel7.repo"
+    gpgkey: "https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/7fa2af80.pub"
+
+
+- name: Install nvidia drivers
+  ansible.builtin.yum:
+    name: "nvidia-driver-latest-dkms"
+    state: present
+    update_cache: True
