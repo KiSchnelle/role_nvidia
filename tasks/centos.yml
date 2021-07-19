@@ -1,9 +1,13 @@
 ---
-- name: Unload noveau
-  community.general.modprobe:
-    name: nouveau
-    state: abesent
-  ignore_errors: true
+- name: Install kernel-devel, kernel-headers, kernel-tools, kernel-tools-libs, kernel-debug-devel
+  ansible.builtin.yum:
+    name: 
+      - "kernel-devel"
+      - "kernel-headers"
+      - "kernel-tools"
+      - "kernel-tools-libs"
+      - "kernel-debug-devel"
+    state: present
 
 
 - name: Make sure epel-release is installed.
@@ -12,25 +16,17 @@
     state: present
 
 
-- name: Install tar, bzip2, make, automake, gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-devel iptables firewalld vim bind-utils wget
-  ansible.builtin.yum:
-    name: "{{ item }}"
-    state: present
-    update_cache: True
-  with_items: "{{ dependencies_packages }}"
+# - name: Install tar, bzip2, make, automake, gcc gcc-c++ pciutils elfutils-libelf-devel libglvnd-devel iptables firewalld vim bind-utils wget
+#   ansible.builtin.yum:
+#     name: "{{ item }}"
+#     state: present
+#     update_cache: True
+#   with_items: "{{ dependencies_packages }}"
 
 
 - name: Install development tools
   ansible.builtin.yum:
     name: "@Development tools"
-    state: present
-
-
-- name: Install kernel-devel, kernel-headers
-  ansible.builtin.yum:
-    name: 
-      - "kernel-devel"
-      - "kernel-headers"
     state: present
 
 
@@ -40,9 +36,9 @@
     state: present
 
 
-- name: Reboot the system
-  ansible.builtin.reboot:
-    reboot_timeout: 300
+# - name: Reboot the system
+#   ansible.builtin.reboot:
+#     reboot_timeout: 300
 
 
 - name: Add cuda repo

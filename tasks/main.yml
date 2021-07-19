@@ -2,16 +2,53 @@
 # tasks file for role_nvidia
 - name: Check OS version and family
   fail:
-    msg: "This role can only be run against CentOS 7. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
+    msg: "This role can only be run against CentOS 7 and 8 or Ubuntu 20. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
   when:
-    - ansible_distribution|lower == 'centos'
-    - ansible_distribution_major_version is version_compare('7', '!=')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('7', '<')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('8', '>')
+    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version('20', '!=')
 
 - name: "Check OS version and family"
   debug:
-    msg: "PASS | This role can only be executed on CentOS 7 operating systems"
+    msg: "PASS | This role can only be executed on CentOS 7 and 8 and Ubuntu 20 operating systems"
   when:
-    - ansible_distribution|lower == 'centos'
-    - ansible_distribution_major_version is version_compare('7', '==')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('7', '==')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('8', '==')
+    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version('20', '==')
 
-- import_tasks: nvidia_driver.yml
+
+- name: Unload noveau
+  community.general.modprobe:
+    name: nouveau
+    state: abesent
+  ignore_errors: true
+
+
+- name: Install for ubuntu.
+  include_tasks: ubuntu.yml
+  when: ansible_distribution|lower == 'ubuntu'
+
+
+- name: Install for CentOS.
+  include_tasks: centos.yml
+  when: ansible_distribution|lower == 'centos'
+
+
+# - name: Create directory for persistance.
+#   ansible.builtin.file:
+#     path: /etc/systemd/system/nvidia-persistenced.service.d/
+#     state: directory
+#     recurse: yes
+
+
+# - name: Configure persitance service.
+#   ansible.builtin.copy:
+#     src: nvidia-persistenced-override.conf
+#     dest: /etc/systemd/system/nvidia-persistenced.service.d/override.conf
+
+
+# - name: Start and enable persistance serivce.
+#   ansible.builtin.systemd:
+#     name: nvidia-persistenced
+#     enabled: yes
+#     started: ture

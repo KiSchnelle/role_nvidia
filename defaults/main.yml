@@ -15,3 +15,5 @@ dependencies_packages:
   - "vim"
   - "bind-utils"
   - "wget"
+
+driver_version: 470
