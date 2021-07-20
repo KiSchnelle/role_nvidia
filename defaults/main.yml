@@ -17,3 +17,5 @@ dependencies_packages:
   - "wget"
 
 driver_version: 470
+
+persistance_mode: false

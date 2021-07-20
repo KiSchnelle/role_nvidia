@@ -28,6 +28,6 @@
 
 - name: Install nvidia drivers.
   ansible.builtin.apt:
-    name: cuda-drivers-"{{ driver_version }}"
+    name: 'cuda-drivers-{{ driver_version }}'
     state: present
     update_cache: true

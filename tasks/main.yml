@@ -1,20 +1,20 @@
 ---
 # tasks file for role_nvidia
 - name: Check OS version and family
-  fail:
+  ansible.builtin.fail:
     msg: "This role can only be run against CentOS 7 and 8 or Ubuntu 20. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
   when:
-    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('7', '<')
-    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('8', '>')
-    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version('20', '!=')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '<')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '>')
+    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '!=')
 
 - name: "Check OS version and family"
-  debug:
-    msg: "PASS | This role can only be executed on CentOS 7 and 8 and Ubuntu 20 operating systems"
+  ansible.builtin.debug:
+    msg: "PASS | This role can only be executed on CentOS 7 and 8 and Ubuntu 20 operating systems, detected {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
   when:
-    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('7', '==')
-    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version('8', '==')
-    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version('20', '==')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '==')
+    - ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '==')
+    - ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '==')
 
 
 - name: Unload noveau
@@ -34,21 +34,25 @@
   when: ansible_distribution|lower == 'centos'
 
 
-# - name: Create directory for persistance.
-#   ansible.builtin.file:
-#     path: /etc/systemd/system/nvidia-persistenced.service.d/
-#     state: directory
-#     recurse: yes
+- name: Create directory for persistance.
+  ansible.builtin.file:
+    path: /etc/systemd/system/nvidia-persistenced.service.d/
+    state: directory
+    recurse: yes
+  when: persistance_mode is true
 
 
-# - name: Configure persitance service.
-#   ansible.builtin.copy:
-#     src: nvidia-persistenced-override.conf
-#     dest: /etc/systemd/system/nvidia-persistenced.service.d/override.conf
+- name: Configure persitance service.
+  ansible.builtin.copy:
+    src: nvidia-persistenced-override.conf
+    dest: /etc/systemd/system/nvidia-persistenced.service.d/override.conf
+    mode: 0644
+  when: persistance_mode is true
 
 
-# - name: Start and enable persistance serivce.
-#   ansible.builtin.systemd:
-#     name: nvidia-persistenced
-#     enabled: yes
-#     started: ture
+- name: Start and enable persistance serivce.
+  ansible.builtin.systemd:
+    name: nvidia-persistenced
+    enabled: yes
+    started: ture
+  when: persistance_mode is true
