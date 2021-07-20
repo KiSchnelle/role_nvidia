@@ -26,8 +26,38 @@
     update_cache: yes
 
 
+- name: Check if nvidia-smi is available.
+  ansible.builtin.shell: nvidia-smi
+  register: nvidia_installed
+  ignore_errors: true
+  changed_when: false
+
+
 - name: Install nvidia drivers.
   ansible.builtin.apt:
     name: 'cuda-drivers-{{ driver_version }}'
     state: present
+    autoremove: true
     update_cache: true
+
+
+- name: Unload nvidia modules.
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "nvidia_uvm"
+    - "nvidia_drm"
+    - "nvidia_modeset"
+    - "nvidia"
+  when: nvidia_installed is not failed
+
+
+- name: Call nvidia-smi.
+  ansible.builtin.shell: nvidia-smi
+  register: nvidia_smi_output
+
+
+- name: Print nvidia-smi output.
+  ansible.builtin.debug:
+    msg: nvidia_smi_output.stdout_lines

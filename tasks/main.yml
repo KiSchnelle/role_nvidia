@@ -39,7 +39,7 @@
     path: /etc/systemd/system/nvidia-persistenced.service.d/
     state: directory
     recurse: yes
-  when: persistance_mode is true
+  when: persistance_mode|bool
 
 
 - name: Configure persitance service.
@@ -47,7 +47,7 @@
     src: nvidia-persistenced-override.conf
     dest: /etc/systemd/system/nvidia-persistenced.service.d/override.conf
     mode: 0644
-  when: persistance_mode is true
+  when: persistance_mode|bool
 
 
 - name: Start and enable persistance serivce.
@@ -55,4 +55,4 @@
     name: nvidia-persistenced
     enabled: yes
     started: ture
-  when: persistance_mode is true
+  when: persistance_mode|bool
