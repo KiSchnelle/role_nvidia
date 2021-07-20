@@ -36,8 +36,8 @@ cd /var/log/ansible/roles
 git clone https://github.com/KiSchnelle/role_nvidia.git
 
 cd /var/log/ansible
-mv /var/log/ansible/roles/role_nvidia/run.yml .
-ansible-playbook run.yml --user=$ANSIBLE_USER --extra-vars "ansible_sudo_pass=$ANSIBLE_USER_PASSWORD" >> log.txt
+cp /var/log/ansible/roles/role_nvidia/run.yml .
+ansible-playbook run.yml --user=$ANSIBLE_USER --extra-vars "ansible_sudo_pass=$ANSIBLE_USER_PASSWORD" >> log_role_slurm.txt
 
 cd /var/log/ansible
 
