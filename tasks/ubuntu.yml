@@ -60,4 +60,4 @@
 
 - name: Print nvidia-smi output.
   ansible.builtin.debug:
-    msg: nvidia_smi_output.stdout_lines
+    msg: "{{ nvidia_smi_output.stdout_lines }}"
