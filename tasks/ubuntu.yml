@@ -51,6 +51,7 @@
     - "nvidia_modeset"
     - "nvidia"
   when: nvidia_installed is not failed
+  ignore_errors: true
 
 
 - name: Call nvidia-smi.
