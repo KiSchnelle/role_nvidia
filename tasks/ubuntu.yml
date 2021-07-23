@@ -5,13 +5,31 @@
     state: absent
 
 
+- name: Install kernel-headers and development tools
+  ansible.builtin.apt:
+    name:
+      - "linux-headers-{{ ansible_kernel }}"
+      - "build-essential"
+    state: present
+    update_cache: true
+
+
 - name: Add pin file to /etc/apt/preferences.d
-  ansible.builtin.copy:
-    src: "cuda.pin"
+  ansible.builtin.get_url:
+    url: "https://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/x86_64/cuda-{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}.pin"
     dest: "/etc/apt/preferences.d/cuda-repository-pin-600"
-    owner: "root"
-    group: "root"
-    mode: "0644"
+    owner: root
+    group: root
+    mode: 0644
+
+
+# - name: Add pin file to /etc/apt/preferences.d
+#   ansible.builtin.copy:
+#     src: "cuda.pin"
+#     dest: "/etc/apt/preferences.d/cuda-repository-pin-600"
+#     owner: "root"
+#     group: "root"
+#     mode: "0644"
 
 
 - name: Add apt key.
