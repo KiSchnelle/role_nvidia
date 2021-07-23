@@ -76,6 +76,18 @@
   ignore_errors: true
 
 
+- name: Unload nvidia modules.
+  community.general.modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "nvidia_uvm"
+    - "nvidia_drm"
+    - "nvidia_modeset"
+    - "nvidia"
+  ignore_errors: true
+
+
 - name: Call nvidia-smi.
   ansible.builtin.shell: nvidia-smi
   register: nvidia_smi_output
