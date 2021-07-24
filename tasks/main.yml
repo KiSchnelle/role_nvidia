@@ -18,7 +18,7 @@
 - name: Unload noveau
   community.general.modprobe:
     name: nouveau
-    state: abesent
+    state: absent
   ignore_errors: true
 
 
