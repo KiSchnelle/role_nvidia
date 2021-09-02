@@ -40,7 +40,7 @@
 
 - name: Add cuda repo
   apt_repository:
-    repo: "deb http://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/{{ ansible_architecture }} /"
+    repo: "deb http://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/{{ ansible_architecture }}/ /"
     update_cache: yes
 
 
