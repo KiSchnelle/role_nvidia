@@ -23,7 +23,8 @@
 
 
 - name: Check if nvidia-smi is available.
-  ansible.builtin.shell: nvidia-smi
+  ansible.builtin.shell:
+    cmd: nvidia-smi
   register: nvidia_installed
   ignore_errors: true
   changed_when: false
