@@ -20,5 +20,5 @@
 
 - name: Install nvidia driver using runtime file.
   ansible.builtin.shell:
-    cmd: "./nvidia-driver-{{ driver_version }}.run --silent"
+    cmd: "bash nvidia-driver-{{ driver_version }}.run --silent"
     chdir: "{{ download_folder }}"
