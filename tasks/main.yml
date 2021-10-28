@@ -3,24 +3,24 @@
 - name: Check OS version and family
   ansible.builtin.fail:
     msg: "This role can only be run against CentOS 7 and 8 or Ubuntu 20. {{ ansible_distribution }} {{ ansible_distribution_major_version }} is not supported."
-  when: (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '<')) or
-        (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '>')) or
-        (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '!='))
+  when:
+    (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '<')) or
+    (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '>')) or
+    (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '!='))
 
 - name: "Check OS version and family"
   ansible.builtin.debug:
     msg: "PASS | This role can only be executed on CentOS 7 and 8 and Ubuntu 20 operating systems, detected {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
-  when: (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '==')) or
-        (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '==')) or
-        (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '=='))
-
+  when:
+    (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('7', '==')) or
+    (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '==')) or
+    (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '=='))
 
 - name: Unload noveau
   community.general.modprobe:
     name: nouveau
     state: absent
   ignore_errors: true
-
 
 - name: Check if nvidia-smi is available.
   ansible.builtin.shell:
@@ -29,16 +29,17 @@
   ignore_errors: true
   changed_when: false
 
+- name: Install from runtime file.
+  include_tasks: runtime.yml
+  when: runtime_install
 
 - name: Install for ubuntu.
   include_tasks: ubuntu.yml
-  when: ansible_distribution|lower == 'ubuntu'
-
+  when: ansible_distribution|lower == 'ubuntu' and not runtime_install
 
 - name: Install for CentOS.
   include_tasks: centos.yml
-  when: ansible_distribution|lower == 'centos'
-
+  when: ansible_distribution|lower == 'centos' and not runtime_install
 
 - name: Create directory for persistance.
   ansible.builtin.file:
@@ -47,7 +48,6 @@
     recurse: yes
   when: persistance_mode|bool
 
-
 - name: Configure persitance service.
   ansible.builtin.copy:
     src: nvidia-persistenced-override.conf
@@ -55,14 +55,12 @@
     mode: 0644
   when: persistance_mode|bool
 
-
 - name: Start and enable persistance serivce.
   ansible.builtin.systemd:
     name: nvidia-persistenced
     enabled: yes
     started: ture
   when: persistance_mode|bool
-
 
 - name: Unload nvidia modules.
   community.general.modprobe:
@@ -76,7 +74,6 @@
   when: nvidia_installed is not failed
   ignore_errors: true
 
-
 # - name: Load nvidia modules.
 #   community.general.modprobe:
 #     name: "{{ item }}"
@@ -88,11 +85,9 @@
 #     - "nvidia"
 #   ignore_errors: true
 
-
 - name: Call nvidia-smi.
   ansible.builtin.shell: nvidia-smi
   register: nvidia_smi_output
-
 
 - name: Print nvidia-smi output.
   ansible.builtin.debug:

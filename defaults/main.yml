@@ -19,3 +19,7 @@ dependencies_packages:
 driver_version: 470
 
 persistance_mode: false
+
+# if runtime file installation is wanted
+runtime_install: true
+download_folder: /sbdata/software/download

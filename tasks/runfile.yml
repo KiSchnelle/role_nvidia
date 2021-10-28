@@ -1,0 +1,24 @@
+---
+- name: Download nvidia-driver runfile.
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ download_folder }}/nvidia-driver-{{ driver_version }}.run"
+  with_items:
+    - {
+        url: https://us.download.nvidia.com/XFree86/Linux-x86_64/470.82.00/NVIDIA-Linux-x86_64-470.82.00.run,
+        driver_version: 470,
+      }
+    - {
+        url: https://us.download.nvidia.com/XFree86/Linux-x86_64/495.44/NVIDIA-Linux-x86_64-495.44.run,
+        driver_version: 490,
+      }
+    - {
+        url: https://us.download.nvidia.com/XFree86/Linux-x86_64/390.144/NVIDIA-Linux-x86_64-390.144.run,
+        driver_version: 390,
+      }
+  when: item.driver_version == driver_version
+
+- name: Install nvidia driver using runtime file.
+  ansible.builtin.shell:
+    cmd: "./nvidia-driver-{{ driver_version }}.run --silent"
+    chdir: "{{ download_folder }}"
