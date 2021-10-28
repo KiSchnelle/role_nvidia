@@ -29,6 +29,9 @@
   ignore_errors: true
   changed_when: false
 
+- name: Make sure needed kernel stuff is installed.
+  include_tasks: kernel_installs.yml
+
 - name: Install from runtime file.
   include_tasks: runtime.yml
   when: runtime_install

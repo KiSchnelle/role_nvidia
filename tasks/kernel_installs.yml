@@ -1,0 +1,20 @@
+---
+- name: Install kernel-devel, kernel-headers, kernel-tools, kernel-tools-libs, kernel-debug-devel
+  ansible.builtin.yum:
+    name:
+      - "kernel-devel"
+      - "kernel-headers"
+      - "kernel-tools"
+      - "kernel-tools-libs"
+      - "kernel-debug-devel"
+    state: present
+  when: ansible_distribution|lower == 'centos'
+
+- name: Install kernel-headers and development tools
+  ansible.builtin.apt:
+    name:
+      - "linux-headers-{{ ansible_kernel }}"
+      - "build-essential"
+    state: present
+    update_cache: true
+  when: ansible_distribution|lower == 'ubuntu'

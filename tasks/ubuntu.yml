@@ -4,16 +4,6 @@
     repo: ppa:graphics-drivers/ppa
     state: absent
 
-
-- name: Install kernel-headers and development tools
-  ansible.builtin.apt:
-    name:
-      - "linux-headers-{{ ansible_kernel }}"
-      - "build-essential"
-    state: present
-    update_cache: true
-
-
 - name: Add pin file to /etc/apt/preferences.d
   ansible.builtin.get_url:
     url: "https://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/x86_64/cuda-{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}.pin"
@@ -21,7 +11,6 @@
     owner: root
     group: root
     mode: 0644
-
 
 # - name: Add pin file to /etc/apt/preferences.d
 #   ansible.builtin.copy:
@@ -31,22 +20,19 @@
 #     group: "root"
 #     mode: "0644"
 
-
 - name: Add apt key.
   ansible.builtin.apt_key:
     url: "https://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/{{ ansible_architecture }}/7fa2af80.pub"
     id: "7fa2af80"
-
 
 - name: Add cuda repo
   apt_repository:
     repo: "deb http://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/{{ ansible_architecture }}/ /"
     update_cache: yes
 
-
 - name: Install nvidia drivers.
   ansible.builtin.apt:
-    name: 'cuda-drivers-{{ driver_version }}'
+    name: "cuda-drivers-{{ driver_version }}"
     state: present
     autoremove: true
     update_cache: true
