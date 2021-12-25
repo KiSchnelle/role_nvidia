@@ -9,8 +9,8 @@
         driver_version: 470,
       }
     - {
-        url: https://us.download.nvidia.com/XFree86/Linux-x86_64/495.44/NVIDIA-Linux-x86_64-495.44.run,
-        driver_version: 490,
+        url: https://de.download.nvidia.com/XFree86/Linux-x86_64/495.46/NVIDIA-Linux-x86_64-495.46.run,
+        driver_version: 495,
       }
     - {
         url: https://us.download.nvidia.com/XFree86/Linux-x86_64/390.144/NVIDIA-Linux-x86_64-390.144.run,
