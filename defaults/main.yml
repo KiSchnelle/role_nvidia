@@ -16,7 +16,7 @@ dependencies_packages:
   - "bind-utils"
   - "wget"
 
-driver_version: 495
+driver_version: 510
 
 persistance_mode: false
 
