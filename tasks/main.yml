@@ -54,7 +54,6 @@
 
 - name: Enable persitance mode.
   include_tasks: persistance.yml
-  when: persistance_mode|bool
 
 - name: Unload nvidia modules.
   community.general.modprobe:
