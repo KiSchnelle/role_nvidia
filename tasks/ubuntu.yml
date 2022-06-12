@@ -19,6 +19,7 @@
     name: kmod
     state: present
     update_cache: true
+  retries: 3
 
 - name: Install nvidia drivers.
   ansible.builtin.apt:
@@ -26,3 +27,4 @@
     state: present
     autoremove: true
     update_cache: true
+  retries: 3
