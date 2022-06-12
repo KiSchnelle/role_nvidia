@@ -8,7 +8,7 @@
     (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '>')) or
     (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '!='))
 
-- name: "Check OS version and family"
+- name: Check OS version and family
   ansible.builtin.debug:
     msg: "PASS | This role can only be executed on CentOS 7 and 8 and Ubuntu 20 operating systems, detected {{ ansible_distribution }} {{ ansible_distribution_major_version }}"
   when:
@@ -16,11 +16,19 @@
     (ansible_distribution|lower == 'centos' and ansible_distribution_major_version is version_compare('8', '==')) or
     (ansible_distribution|lower == 'ubuntu' and ansible_distribution_major_version is version_compare('20', '=='))
 
+- name: Populate service facts.
+  ansible.builtin.service_facts:
+
 - name: Unload noveau
   community.general.modprobe:
     name: nouveau
     state: absent
   ignore_errors: true
+
+- name: Blacklist nouveau module.
+  community.general.kernel_blacklist:
+    name: nouveau
+    state: present
 
 - name: Check if nvidia-smi is available.
   ansible.builtin.shell:
@@ -40,29 +48,12 @@
   include_tasks: ubuntu.yml
   when: ansible_distribution|lower == 'ubuntu' and not runtime_install
 
-- name: Install for CentOS.
-  include_tasks: centos.yml
-  when: ansible_distribution|lower == 'centos' and not runtime_install
+# - name: Install for CentOS.
+#   include_tasks: centos.yml
+#   when: ansible_distribution|lower == 'centos' and not runtime_install
 
-- name: Create directory for persistance.
-  ansible.builtin.file:
-    path: /etc/systemd/system/nvidia-persistenced.service.d/
-    state: directory
-    recurse: yes
-  when: persistance_mode|bool
-
-- name: Configure persitance service.
-  ansible.builtin.copy:
-    src: nvidia-persistenced-override.conf
-    dest: /etc/systemd/system/nvidia-persistenced.service.d/override.conf
-    mode: 0644
-  when: persistance_mode|bool
-
-- name: Start and enable persistance serivce.
-  ansible.builtin.systemd:
-    name: nvidia-persistenced
-    enabled: yes
-    started: ture
+- name: Enable persitance mode.
+  include_tasks: persistance.yml
   when: persistance_mode|bool
 
 - name: Unload nvidia modules.
@@ -76,17 +67,6 @@
     - "nvidia"
   when: nvidia_installed is not failed
   ignore_errors: true
-
-# - name: Load nvidia modules.
-#   community.general.modprobe:
-#     name: "{{ item }}"
-#     state: present
-#   with_items:
-#     - "nvidia_uvm"
-#     - "nvidia_drm"
-#     - "nvidia_modeset"
-#     - "nvidia"
-#   ignore_errors: true
 
 - name: Call nvidia-smi.
   ansible.builtin.shell: nvidia-smi

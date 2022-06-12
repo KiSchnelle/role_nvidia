@@ -16,6 +16,10 @@
         url: https://us.download.nvidia.com/XFree86/Linux-x86_64/390.144/NVIDIA-Linux-x86_64-390.144.run,
         driver_version: 390,
       }
+    - {
+        url: https://de.download.nvidia.com/XFree86/Linux-x86_64/515.48.07/NVIDIA-Linux-x86_64-515.48.07.run,
+        driver_version: 515,
+      }
   when: item.driver_version == driver_version
 
 - name: Install nvidia driver using runtime file.

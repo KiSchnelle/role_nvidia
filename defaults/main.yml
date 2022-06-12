@@ -16,9 +16,9 @@ dependencies_packages:
   - "bind-utils"
   - "wget"
 
-driver_version: 470
+driver_version: 515
 
-persistance_mode: false
+install_persistance: true
 
 # if runtime file installation is wanted
 runtime_install: true
