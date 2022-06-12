@@ -13,6 +13,7 @@
   ansible.builtin.apt:
     deb: "https://developer.download.nvidia.com/compute/cuda/repos/{{ ansible_distribution | lower }}{{ ansible_distribution_version | replace('.', '') }}/{{ ansible_architecture }}/cuda-keyring_1.0-1_all.deb"
     state: "present"
+  retries: 3
 
 - name: Install kmod
   ansible.builtin.apt_key:

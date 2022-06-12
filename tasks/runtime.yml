@@ -25,6 +25,7 @@
         driver_version: 515,
       }
   when: item.driver_version == driver_version
+  retries: 3
 
 - name: Install nvidia driver using runtime file.
   ansible.builtin.shell:
