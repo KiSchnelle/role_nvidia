@@ -16,7 +16,7 @@ dependencies_packages:
   - "bind-utils"
   - "wget"
 
-driver_version: 515
+driver_version: 520
 
 install_persistance: true
 
