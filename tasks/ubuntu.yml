@@ -16,7 +16,7 @@
   retries: 3
 
 - name: Install kmod
-  ansible.builtin.apt_key:
+  ansible.builtin.apt:
     name: kmod
     state: present
     update_cache: true
