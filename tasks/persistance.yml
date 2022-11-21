@@ -5,23 +5,24 @@
     state: stopped
   when: ansible_facts.services['nvidia-persistenced.service'] is defined
 
-- name: Uninstall persistance deamon.
-  ansible.builtin.shell:
-    cmd: "./install.sh -r"
-    chdir: "/usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init"
-  when: not install_persistance and ansible_facts.services['nvidia-persistenced.service'] is defined
+# TODO add persistance old install check
+# - name: Uninstall persistance deamon.
+#   ansible.builtin.shell:
+#     cmd: "./install.sh -r"
+#     chdir: "/usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init"
+#   when: not install_persistance and ansible_facts.services['nvidia-persistenced.service'] is defined
 
-- name: Untar persistance directory.
-  ansible.builtin.unarchive:
-    src: /usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init.tar.bz2
-    dest: /usr/share/doc/NVIDIA_GLX-1.0/samples/
-  when: install_persistance and ansible_facts.services['nvidia-persistenced.service'] is not defined
+# - name: Untar persistance directory.
+#   ansible.builtin.unarchive:
+#     src: /usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init.tar.bz2
+#     dest: /usr/share/doc/NVIDIA_GLX-1.0/samples/
+#   when: install_persistance and ansible_facts.services['nvidia-persistenced.service'] is not defined
 
-- name: Install persistance deamon.
-  ansible.builtin.shell:
-    cmd: "./install.sh"
-    chdir: "/usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init"
-  when: install_persistance and ansible_facts.services['nvidia-persistenced.service'] is not defined
+# - name: Install persistance deamon.
+#   ansible.builtin.shell:
+#     cmd: "./install.sh"
+#     chdir: "/usr/share/doc/NVIDIA_GLX-1.0/samples/nvidia-persistenced-init"
+#   when: install_persistance and ansible_facts.services['nvidia-persistenced.service'] is not defined
 
 - name: Start persistance deamon.
   ansible.builtin.systemd:
